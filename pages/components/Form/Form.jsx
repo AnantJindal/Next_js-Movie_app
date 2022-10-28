@@ -5,7 +5,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import { Spin } from 'antd';
 import { useRouter } from 'next/router'
 
-const Form = () => {
+
+const Form = ({ res }) => {
     const [value, setValue] = useState({
         username: "",
         password: ""
@@ -26,6 +27,13 @@ const Form = () => {
 
     }
 
+    // const fetchingToken = async () => {
+    //     console.log(res)
+    //     if (typeof window !== "undefined") {
+    //         localStorage.setItem('token', res);
+    //     }
+    // }
+
     const onValueChangeHandeler = (e) => {
         setValue({ ...value, [e.target.name]: e.target.value })
     }
@@ -34,58 +42,55 @@ const Form = () => {
     const LoginHandeler = async () => {
         setLoading(true)
 
-        setTimeout(async () => {
-            const { username, password } = value
+        const { username, password } = value
 
-            if (username.trim() === "" && password.trim() === "") {
-                toast.error("Enter your credintals")
-                setLoading(false)
-            }
-            else if (username.trim() === "") {
-                toast.error("Enter your username")
-                setLoading(false)
-            }
-            else if (password.trim() === "") {
-                toast.error("Enter your password")
-                setLoading(false)
-            }
-            else if (username.trim() === "" || username !== "Anant_jindal") {
-                setuserNameError(true)
-                toast.error("User name is not valid")
-                setLoading(false)
-            }
-            else if (password.trim() === "" || password !== "5687Anant@") {
-                setPasswordError(true)
-                toast.error("Password is not valid")
-                setLoading(false)
-            }
-            else {
-                await fetchingToken();
+        if (username.trim() === "" && password.trim() === "") {
+            toast.error("Enter your credintals")
+            setLoading(false)
+        }
+        else if (username.trim() === "") {
+            toast.error("Enter your username")
+            setLoading(false)
+        }
+        else if (password.trim() === "") {
+            toast.error("Enter your password")
+            setLoading(false)
+        }
+        else if (username.trim() === "" || username !== "Anant_jindal") {
+            setuserNameError(true)
+            toast.error("User name is not valid")
+            setLoading(false)
+        }
+        else if (password.trim() === "" || password !== "5687Anant@") {
+            setPasswordError(true)
+            toast.error("Password is not valid")
+            setLoading(false)
+        }
+        else {
+            await fetchingToken();
 
-                const checkToken = localStorage.getItem("token")
+            const checkToken = localStorage.getItem("token")
 
-                const data = {
-                    "username": value.username,
-                    "password": value.password,
-                    "request_token": checkToken
-                }
-                const res = await axios.post("https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=36f92e051d1f7b92dd147302b1b51f81", data)
-                setLoading(false)
-
-                setValue({
-                    username: "",
-                    password: ""
-                })
-
-                toast.success("Login Success")
-                router.push('/mainpaths/Home/Home')
+            const data = {
+                "username": value.username,
+                "password": value.password,
+                "request_token": checkToken
             }
-        }, 1000)
+            const res = await axios.post("https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=36f92e051d1f7b92dd147302b1b51f81", data)
+            setLoading(false)
+
+            setValue({
+                username: "",
+                password: ""
+            })
+
+            toast.success("Login Success")
+            router.push('/mainpaths/Home/Home')
+        }
 
     }
     return (
         <>
-
             <section className={style.section}>
                 <div className={style.formContainer} >
                     <h1 className={style.h1}>Sign in</h1>
@@ -107,3 +112,15 @@ const Form = () => {
 }
 
 export default Form
+
+
+
+// export const getStaticProps = async () => {
+//     const token = await fetch(`https://api.themoviedb.org/3/${authentication}/token/new?api_key=36f92e051d1f7b92dd147302b1b51f81`).then((res) => res.json())
+//     console.log(token)
+//     return {
+//         props: {
+//             token
+//         }
+//     }
+// }

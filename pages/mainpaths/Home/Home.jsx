@@ -6,9 +6,8 @@ import style from './Home.module.css'
 import { Col, Row, } from 'antd';
 import Loader from '../../components/Loader/Loader'
 import Pagenation from '../../components/Pagenation/Pagenation'
-import Navbar from '../../components/Header/Header'
 
-const Home = () => {
+const Home = ({movies}) => {
     const [apidata, setApiData] = useState([])
     const [loading, setLoading] = useState(false)
     const [page, setPage] = useState(1)
@@ -24,10 +23,10 @@ const Home = () => {
             })
     }
 
-    useEffect(() => {
-        setLoading(true)
-        getApidata()
-    }, [page])
+    // useEffect(() => {
+    //     setLoading(true)
+    //     getApidata()
+    // }, [page])
 
     const nextPage = () => {
         setPage(page + 1)
@@ -43,7 +42,6 @@ const Home = () => {
 
     return (
         <>
-            <Navbar />
             <div className={style.home}>
                 <Wallpaper />
                 <div className={style.data}>
@@ -57,7 +55,7 @@ const Home = () => {
                     }
                     <Row gutter={[16, 24]}>
                         {
-                            apidata.map((ele, i) => {
+                            movies.results.map((ele, i) => {
                                 return (
                                     <Col span={6} key={i} >
                                         <Card ele={ele} i={i} />
@@ -80,3 +78,13 @@ const Home = () => {
 }
 
 export default Home
+
+export const getStaticProps = async () => {
+    const movies = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=36f92e051d1f7b92dd147302b1b51f81&page=${1}`).then((res) => res.json())
+  
+    return {
+        props: {
+            movies
+        }
+    }
+}

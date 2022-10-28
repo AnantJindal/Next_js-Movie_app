@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import style from './Header.module.css'
-import Logo from '../../assests/Logo.svg'
-import SearchIcon from '../../assests/search.svg'
+import Logo from '../../pages/assests/Logo.svg'
+import SearchIcon from '../../pages/assests/search.svg'
 import axios from 'axios';
 import { Card } from 'antd';
 import Image from 'next/image'
